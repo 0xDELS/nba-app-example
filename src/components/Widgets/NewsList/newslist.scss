@@ -1,0 +1,30 @@
+.newslist_item {
+    border: 1px solid #f2f2f2;
+    background: #fff;
+    margin-top: 0px;
+    padding: 8px 5px 0 5px;
+
+    h2{
+        font-size: 13px;
+        line-height: 21px;
+        margin: 5px 0;
+        color: #525252;   
+    }
+
+    a {
+        text-decoration: none;
+        flex-grow: 1;
+    }
+}
+
+.newsList_wrapper {
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateX(-100%);
+    transform: all 1s ease-in;
+}
+
+.newsList_wrapper-enter-active{
+    opacity: 1;
+    transform: translateX(0%);
+}
