@@ -1,5 +1,6 @@
 import React from 'react'
 import './button.scss'
+import { Link } from 'react-router-dom'
 
 const Button = (props) => {
     let template = null
@@ -12,6 +13,13 @@ const Button = (props) => {
                 </div>
             )
             break
+        case 'linkTo':
+            template = (
+                <Link to={props.linkTo} className="blue-btn">
+                    {props.cta}
+                </Link>
+            )
+            break;
         default:
             template=null
     }

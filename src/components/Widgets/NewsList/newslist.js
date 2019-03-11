@@ -36,7 +36,9 @@ class NewsList extends Component {
         .then( response => {
             this.setState({
                 //Keep all the item that already exist and add more if we request it [...this.state.items]
-                items:[...this.state.items, ...response.data]
+                items:[...this.state.items, ...response.data],
+                start,
+                end
             })
         })
     }
