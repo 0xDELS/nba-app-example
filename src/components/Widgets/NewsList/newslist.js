@@ -50,7 +50,7 @@ class NewsList extends Component {
 
     renderNews = (type) => {
         let template = null
-
+        console.log(this.state)
         switch(type){
             case('card'):
                 template = this.state.items.map( (item, i) => (
@@ -65,6 +65,33 @@ class NewsList extends Component {
                                     <CardInfo teams={this.state.teams} team={item.team} date={item.date} />
                                     <h2>{item.title}</h2>
                                 </Link>
+                            </div>
+                        </div>
+                    </CSSTransition>
+                    
+                ))
+                break
+
+            case ('2columns'):
+                template = this.state.items.map( (item, i) => (
+                    <CSSTransition
+                        classNames='newsList_wrapper'
+                        timeout={1000}
+                        key={i}
+                    >
+                        <div>
+                            <div className="flexWrapper">
+                                <div className="left" style={{
+                                    background: `url('/images/articles/${item.image}')`
+                                }}>
+                                    <div></div>
+                                </div>
+                                <div className="right">
+                                    <Link to={`/articles/${item.id}`}>
+                                        <CardInfo teams={this.state.teams} team={item.team} date={item.date} />
+                                        <h2>{item.title}</h2>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </CSSTransition>
