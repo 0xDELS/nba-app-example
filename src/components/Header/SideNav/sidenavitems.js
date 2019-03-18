@@ -32,6 +32,12 @@ const SideNavItems = () => {
             text: 'Videos',
             link: '/videos'
         },
+        {
+            type: 'option',
+            icon: 'play',
+            text: 'Sign In',
+            link: '/sign-in'
+        }
     ]
 
     const showItems = () => {
