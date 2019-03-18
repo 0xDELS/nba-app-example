@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import './newslist.scss'
 import Button from '../Button/button'
 import CardInfo from '../CardInfo/cardinfo'
-
-import { URL } from '../../../config' 
+import { firebaseTeams, firebaseArticles, firebaseLooper } from '../../../firebase'
 
 class NewsList extends Component {
 
@@ -24,33 +22,34 @@ class NewsList extends Component {
 
     request = (start, end) => {
         if(this.state.teams.length < 1){
-            axios.get(`${URL}/teams`)
-            .then( response => {
-                this.setState({
-                    teams: response.data
-                })
+            firebaseTeams.once('value')
+            .then((snapshot) => {
+                const teams = firebaseLooper(snapshot)
+                this.setState({teams})
             })
         }
 
-        axios.get(`${URL}/articles?_start=${start}&_end=${end}`)
-        .then( response => {
+        firebaseArticles.orderByChild('id').startAt(start).endAt(end).once('value')
+        .then((snapshot)=>{
+            const articles = firebaseLooper(snapshot)
             this.setState({
-                //Keep all the item that already exist and add more if we request it [...this.state.items]
-                items:[...this.state.items, ...response.data],
+                items:[...this.state.items, ...articles],
                 start,
                 end
             })
+        })
+        .catch(e => {
+            console.log(e)
         })
     }
 
     loadMore = () => {
         let end = this.state.end + this.state.amount
-        this.request(this.state.end, end)
+        this.request(this.state.end + 1, end)
     }
 
     renderNews = (type) => {
         let template = null
-        console.log(this.state)
         switch(type){
             case('card'):
                 template = this.state.items.map( (item, i) => (
