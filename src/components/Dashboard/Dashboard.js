@@ -56,6 +56,9 @@ class Dashboard extends Component {
                     name:'teams_input',
                     options: []
                 },
+                validation:{
+                    required:true
+                },
                 valid: false,
                 touched: false,
                 validationMessage:''
