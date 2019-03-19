@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './SignIn.scss'
 import FormField from '../Widgets/FormFields/FormFields'
+import { firebase } from '../../firebase'
 
 class SignIn extends Component {
 
@@ -113,9 +114,29 @@ class SignIn extends Component {
                     registerError: ''
                 })
                 if(type){
-                    console.log('LOGIN')
+                    firebase.auth()
+                    .signInWithEmailAndPassword(
+                        dataToSubmit.email, dataToSubmit.password
+                    ).then(()=>{
+                        this.props.history.push('/')
+                    }).catch( error => {
+                        this.setState({
+                            loading: false,
+                            registerError: error.message
+                        })
+                    })
                 }else{
-                    console.log('REGISTER')
+                    firebase.auth()
+                    .createUserWithEmailAndPassword(
+                        dataToSubmit.email, dataToSubmit.password
+                    ).then(()=>{
+                        this.props.history.push('/')
+                    }).catch( error => {
+                        this.setState({
+                            loading: false,
+                            registerError: error.message
+                        })
+                    })
                 }
             }
         }
@@ -129,6 +150,15 @@ class SignIn extends Component {
                 <button onClick={(event)=>this.submitForm(event, false)}>Register Now</button>
                 <button onClick={(event)=>this.submitForm(event, true)}>Login</button>
             </div>
+    )
+
+    showError = () => (
+        this.state.registerError !== '' ?
+            <div className="error">
+                {this.state.registerError}
+            </div>
+        : 
+            ''
     )
 
     render() {
@@ -149,6 +179,7 @@ class SignIn extends Component {
                     />
 
                     { this.submitButton() }
+                    { this.showError() }
                 </form>
             </div>
         );
