@@ -4,6 +4,7 @@ import FormField from '../Widgets/FormFields/FormFields'
 import { Editor } from 'react-draft-wysiwyg'
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
+import { firebaseTeams } from '../../firebase'
 
 
 class Dashboard extends Component {
@@ -47,6 +48,17 @@ class Dashboard extends Component {
                 element:'textEditor',
                 value: '',
                 valid: true
+            },
+            teams:{
+                element:'select',
+                value: '',
+                config:{
+                    name:'teams_input',
+                    options: []
+                },
+                valid: false,
+                touched: false,
+                validationMessage:''
             }
         }
     }
@@ -146,6 +158,34 @@ class Dashboard extends Component {
         })
     }
 
+    loadTeams = () => {
+        firebaseTeams.once('value')
+        .then((snap) => {
+            let teams = []
+
+            snap.forEach((childSnap) => {
+                teams.push({
+                    id: childSnap.val().teamId,
+                    name: childSnap.val().city
+                })
+            })
+
+            const newFormData = {...this.state.formData}
+            const newElement = {...newFormData['teams']}
+
+            newElement.config.options = teams
+            newFormData['teams'] = newElement
+
+            this.setState({
+                formData: newFormData
+            })
+        })
+    }
+
+    componentDidMount(){
+        this.loadTeams()
+    }
+
     render() {
         return (
             <div className="postContainer">
@@ -168,6 +208,12 @@ class Dashboard extends Component {
                         wrapperClassName="myEditor-Wrapper"
                         editorClassName="myEditor-Editor"
                         onEditorStateChange={this.onEditorStateChange}
+                    />
+
+                    <FormField 
+                        id={'teams'}
+                        formData={this.state.formData.teams}
+                        change={(element)=>this.updateForm(element)}
                     />
 
                     { this.submitButton() }
