@@ -4,7 +4,7 @@ import FormField from '../Widgets/FormFields/FormFields'
 import { Editor } from 'react-draft-wysiwyg'
 import { EditorState } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
-import { firebaseTeams } from '../../firebase'
+import { firebaseTeams, firebaseArticles, firebase } from '../../firebase'
 import Uploader from '../Widgets/FileUploader/FileUploader'
 
 
@@ -55,7 +55,7 @@ class Dashboard extends Component {
                 value: '',
                 valid: true
             },
-            teams:{
+            team:{
                 element:'select',
                 value: '',
                 config:{
@@ -126,10 +126,34 @@ class Dashboard extends Component {
             formIsValid = this.state.formData[key].valid && formIsValid
         }
 
-        console.log(dataToSubmit)
-
         if(formIsValid){
-            console.log('Submit Post')
+            this.setState({
+                loading: true,
+                postError:''
+            })
+
+            firebaseArticles.orderByChild('id')
+            .limitToLast(1).once('value')
+            .then( (snap) => {
+                let articleID = null
+
+                snap.forEach(childSnap => {
+                    articleID = childSnap.val().id
+                })
+
+                dataToSubmit['date'] = firebase.database.ServerValue.TIMESTAMP
+                dataToSubmit['id'] = articleID + 1
+                dataToSubmit['team'] = parseInt(dataToSubmit['team'])
+
+                firebaseArticles.push(dataToSubmit)
+                .then( article => {
+                    this.props.history.push(`articles/${article.key}`)
+                }).catch(e => {
+                    this.setState({
+                        postError: e.message
+                    })
+                })
+            })
         } else {
             this.setState({
                 postError: 'Something went wrong'
@@ -180,10 +204,10 @@ class Dashboard extends Component {
             })
 
             const newFormData = {...this.state.formData}
-            const newElement = {...newFormData['teams']}
+            const newElement = {...newFormData['team']}
 
             newElement.config.options = teams
-            newFormData['teams'] = newElement
+            newFormData['team'] = newElement
 
             this.setState({
                 formData: newFormData
@@ -227,8 +251,8 @@ class Dashboard extends Component {
                     />
 
                     <FormField 
-                        id={'teams'}
-                        formData={this.state.formData.teams}
+                        id={'team'}
+                        formData={this.state.formData.team}
                         change={(element)=>this.updateForm(element)}
                     />
 
