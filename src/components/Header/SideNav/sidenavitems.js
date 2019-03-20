@@ -10,8 +10,6 @@ library.add(faHome, faNewspaper, faPlay)
 
 const SideNavItems = (props) => {
 
-    console.log(props)
-
     const items = [
         {
             type: 'option',
