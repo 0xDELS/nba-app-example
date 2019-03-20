@@ -49,8 +49,7 @@ class NewsArticles extends Component {
                          background: `url('${this.state.imageURL}')`
                      }}>
                      </div>
-                     <div className="articleText">
-                        {article.body}
+                     <div className="articleText" dangerouslySetInnerHTML={{__html: article.body}}>
                      </div>
                 </div>
             </div>
