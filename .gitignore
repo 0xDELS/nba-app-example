@@ -19,7 +19,12 @@ db.json
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Firebase
 /src/firebaseConfig.js
+.firebaserc
+firebase.json
+/.firebase
 
 npm-debug.log*
 yarn-debug.log*
