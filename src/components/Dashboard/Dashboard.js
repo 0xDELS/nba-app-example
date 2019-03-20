@@ -50,6 +50,11 @@ class Dashboard extends Component {
                 value: '',
                 valid: true
             },
+            image:{
+                element:'image',
+                value: '',
+                valid: true
+            },
             teams:{
                 element:'select',
                 value: '',
@@ -190,13 +195,17 @@ class Dashboard extends Component {
         this.loadTeams()
     }
 
+    storeFilename = (filename) => {
+         this.updateForm({id: 'image'}, filename)
+    }
+
     render() {
         return (
             <div className="postContainer">
                 <form onSubmit={this.submitForm}>
                     <h2>Add Post</h2>
 
-                    <Uploader />
+                    <Uploader filename={ (filename) => this.storeFilename(filename) }/>
 
                     <FormField 
                         id={'author'}

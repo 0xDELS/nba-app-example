@@ -44,6 +44,7 @@ class Uploader extends Component {
                 fileURL: url
             })
         })
+        this.props.filename(filename)
     }
 
     render() {
